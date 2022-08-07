@@ -1,13 +1,13 @@
 from mcdreforged.api.all import *
 from minecraft_data_api import Coordinate, get_player_coordinate, get_player_dimension, get_server_player_list
 
-from where.dimensions import get_dimension, Dimension, LegacyDimension
-from where.config import config
-from where.globals import tr, debug, gl_server, ntr
+from where_is.dimensions import get_dimension, Dimension, LegacyDimension
+from where_is.config import config
+from where_is.globals import tr, debug, gl_server, ntr
 
 
-@new_thread('Where_Main')
-def where(source: CommandSource, target_player: str, parameter: str = '-'):
+@new_thread('WhereIs_Main')
+def where_is(source: CommandSource, target_player: str, parameter: str = '-'):
     para_list = list(parameter[1:])
     if 's' not in para_list and not config.location_protection.is_allowed(source, target_player):
         source.reply(tr('err.player_protected').set_color(RColor.red))
@@ -20,7 +20,7 @@ def where(source: CommandSource, target_player: str, parameter: str = '-'):
             return
         coordinate = get_player_coordinate(target_player, timeout=config.query_timeout)
         dimension = get_dimension(get_player_dimension(target_player, timeout=config.query_timeout))
-        rtext = where_text(target_player, coordinate, dimension)
+        rtext = where_is_text(target_player, coordinate, dimension)
     except Exception as exc:
         source.reply(tr("err.generic", str(exc)).set_color(RColor.red))
         gl_server.logger.exception('Unexpected exception occurred while querying player location')
@@ -28,14 +28,14 @@ def where(source: CommandSource, target_player: str, parameter: str = '-'):
 
     if 'a' in para_list:
         gl_server.broadcast(rtext)
-        if config.highlight_time.where > 0:
+        if config.highlight_time.where_is > 0:
             gl_server.execute('effect give {} minecraft:glowing {} 0 true'.format(
-                target_player, config.highlight_time.where))
+                target_player, config.highlight_time.where_is))
     else:
         source.reply(rtext)
 
 
-@new_thread('Where_Main')
+@new_thread('WhereIs_Main')
 def here(source: PlayerCommandSource):
     if gl_server.get_plugin_metadata('here') is not None:
         gl_server.logger.warning(ntr('warn.duplicated_here'))
@@ -43,7 +43,7 @@ def here(source: PlayerCommandSource):
     try:
         coordinate = get_player_coordinate(source.player, timeout=config.query_timeout)
         dimension = get_dimension(get_player_dimension(source.player, timeout=config.query_timeout))
-        rtext = where_text(source.player, coordinate, dimension)
+        rtext = where_is_text(source.player, coordinate, dimension)
     except Exception as exc:
         source.reply(tr("err.generic", str(exc)).set_color(RColor.red))
         gl_server.logger.exception('Unexpected exception occurred while broadcasting player location')
@@ -76,7 +76,7 @@ def coordinate_text(x: float, y: float, z: float, dimension: Dimension):
         return coord.h(dimension.get_rtext())
 
 
-def where_text(target_player: str, pos: Coordinate, dim: Dimension) -> RTextBase:
+def where_is_text(target_player: str, pos: Coordinate, dim: Dimension) -> RTextBase:
     """
     Main text converter from TISUnion/Here(http://github.com/TISUnion/Here)
     Licensed under GNU General Public License v3.0
@@ -120,19 +120,19 @@ def where_text(target_player: str, pos: Coordinate, dim: Dimension) -> RTextBase
 
 
 def register_commands(server: PluginServerInterface):
-    if config.enable_where:
+    if config.enable_where_is:
         server.register_command(
-            Literal(config.command_prefix.where_prefixes).then(
+            Literal(config.command_prefix.where_is_prefixes).then(
                 QuotableText("player").requires(
                     config.permission_requirements.query_is_allowed
                 ).runs(
-                    lambda src, ctx: where(src, ctx['player'])).then(
+                    lambda src, ctx: where_is(src, ctx['player'])).then(
                     QuotableText('parameter').requires(
                         config.permission_requirements.is_admin
                     ).requires(
                         lambda src, ctx: ctx['parameter'].startswith('-')
                     ).runs(
-                        lambda src, ctx: where(src, ctx['player'], ctx['parameter'])
+                        lambda src, ctx: where_is(src, ctx['player'], ctx['parameter'])
                     )
                 )
             )
@@ -147,10 +147,10 @@ def register_commands(server: PluginServerInterface):
 
 
 def register_help_messages(server: PluginServerInterface):
-    if config.enable_where:
-        for p in config.command_prefix.where_prefixes:
+    if config.enable_where_is:
+        for p in config.command_prefix.where_is_prefixes:
             server.register_help_message(p, server.get_self_metadata().description,
-                                         permission=config.permission_requirements.where)
+                                         permission=config.permission_requirements.where_is)
     if config.enable_here:
         for p in config.command_prefix.here_prefixes:
             server.register_help_message(p, server.get_self_metadata().description,

@@ -3,16 +3,16 @@ from mcdreforged.api.types import CommandSource, PlayerCommandSource
 from enum import Enum
 from typing import List, Union, Dict
 
-from where.globals import gl_server, get_default_mappings, ntr
+from where_is.globals import gl_server, get_default_mappings, ntr
 
 
 class PermissionReq(Serializable):
-    where: int = 1
+    where_is: int = 1
     here: int = 0
     admin: int = 3
 
     def query_is_allowed(self, source: CommandSource):
-        return source.has_permission(self.where)
+        return source.has_permission(self.where_is)
 
     def broadcast_is_allowed(self, source: CommandSource):
         return source.has_permission(self.here) and isinstance(source, PlayerCommandSource)
@@ -32,8 +32,8 @@ class LocationProtection(Serializable):
     whitelist: List[str] = []
     blacklist: List[str] = []
     protected_text: Dict[str, str] = {
-        'en_us': 'In your heart Nya~',
-        'zh_cn': '在你心里捏~'
+        'en_us': 'He/She\'s in your heart!',
+        'zh_cn': 'Ta在你心里!'
     }
 
     def is_allowed(self, source: CommandSource, target: str):
@@ -50,7 +50,7 @@ class LocationProtection(Serializable):
 
     def register_tr(self):
         for lang, value in self.protected_text.items():
-            gl_server.register_translation(lang, {'where.err.player_protected': value})
+            gl_server.register_translation(lang, {'where_is.err.player_protected': value})
 
 
 class TranslationMode(Enum):
@@ -59,14 +59,14 @@ class TranslationMode(Enum):
 
 
 class CommandPrefix(Serializable):
-    where: Union[List[str], str] = ['!!wris', '!!where']
+    where_is: Union[List[str], str] = ['!!wris', '!!where']
     here: Union[List[str], str] = ['!!here']
 
     @property
-    def where_prefixes(self) -> List[str]:
-        if isinstance(self.where, str):
-            return [self.where]
-        return self.where
+    def where_is_prefixes(self) -> List[str]:
+        if isinstance(self.where_is, str):
+            return [self.where_is]
+        return self.where_is
 
     @property
     def here_prefixes(self) -> List[str]:
@@ -82,13 +82,13 @@ class DimensionTranslationMappings(dict, Serializable):
 
 
 class HighlightTimePreference(Serializable):
-    where: int = 0
+    where_is: int = 0
     here: int = 15
 
 
 class Config(Serializable):
     enable_here: bool = True
-    enable_where: bool = True
+    enable_where_is: bool = True
     command_prefix: CommandPrefix = CommandPrefix.get_default()
     permission_requirements: PermissionReq = PermissionReq.get_default()
     highlight_time: HighlightTimePreference = HighlightTimePreference.get_default()
@@ -126,7 +126,7 @@ class Config(Serializable):
                     missing.append(key)
             if len(missing) > 0:
                 gl_server.logger.info(ntr('cfg.vanilla_dim_missed', lang, ', '.join(missing)))
-            gl_server.register_translation(lang, {'where': {'dim': cfg.custom_dimension_name[lang]}})
+            gl_server.register_translation(lang, {'where_is': {'dim': cfg.custom_dimension_name[lang]}})
 
         cfg.location_protection.register_tr()
 

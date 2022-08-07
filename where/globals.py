@@ -43,7 +43,7 @@ def dtr(key: str, *args, lang: Optional[str] = None, allow_failure: bool = True,
     except Exception as exc:
         if not allow_failure:
             raise exc
-        if key.startswith('where.dim.'):
+        if key.startswith('where_is.dim.'):
             return key[13:]
         else:
             return key
