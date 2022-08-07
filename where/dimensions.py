@@ -3,8 +3,8 @@ from typing import Tuple
 
 from mcdreforged.api.all import *
 from minecraft_data_api import Coordinate
-from where_is.config import config
-from where_is.globals import tr, dtr
+from where.config import config
+from where.globals import tr, dtr
 
 """
 Copied from TISUnion/Here

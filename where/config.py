@@ -3,7 +3,7 @@ from mcdreforged.api.types import CommandSource, PlayerCommandSource, PluginServ
 from enum import Enum
 from typing import List, Union, Dict
 
-from where_is.globals import gl_server, ntr
+from where.globals import gl_server, ntr
 
 
 class PermissionReq(Serializable):

@@ -1,12 +1,12 @@
 from mcdreforged.api.all import *
 from minecraft_data_api import Coordinate, get_player_coordinate, get_player_dimension, get_server_player_list
 
-from where_is.dimensions import get_dimension, Dimension, LegacyDimension
-from where_is.config import config
-from where_is.globals import tr, debug, gl_server, ntr
+from where.dimensions import get_dimension, Dimension, LegacyDimension
+from where.config import config
+from where.globals import tr, debug, gl_server, ntr
 
 
-@new_thread('WhereIs_Main')
+@new_thread('Where_Main')
 def where_is(source: CommandSource, target_player: str, parameter: str = '-'):
     para_list = list(parameter[1:])
     if 's' not in para_list and not config.location_protection.is_allowed(source, target_player):
@@ -35,7 +35,7 @@ def where_is(source: CommandSource, target_player: str, parameter: str = '-'):
         source.reply(rtext)
 
 
-@new_thread('WhereIs_Main')
+@new_thread('Where_Main')
 def here(source: PlayerCommandSource):
     if gl_server.get_plugin_metadata('here') is not None:
         gl_server.logger.warning(ntr('warn.duplicated_here'))
