@@ -1,0 +1,20 @@
+{
+	"id": "where",
+	"version": "1.0.0",
+	"name": "Where",
+	"description": {
+		"en_us": "Broadcast other player position",
+		"zh_cn": "显示其他玩家坐标"
+	},
+	"author": [
+		"Fallen_Breath",
+        "Magicst_Magoo",
+		"nathan21hz",
+		"Ra1ny_Yuki"
+	],
+	"entrypoint": "where.entry",
+	"link": "https://github.com/MagicstMagoo/Where",
+	"resources": [
+		"LICENSE"
+	]
+}
