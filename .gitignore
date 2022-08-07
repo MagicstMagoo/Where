@@ -1,0 +1,4 @@
+*.mcdr
+.vscode
+.idea
+*.zip
