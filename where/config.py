@@ -9,7 +9,7 @@ from where.globals import gl_server, ntr
 class PermissionReq(Serializable):
     where_is: int = 1
     here: int = 0
-    admin: int = 3
+    admin: int = 0
 
     def query_is_allowed(self, source: CommandSource):
         return source.has_permission(self.where_is)
